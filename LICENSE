@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Shinsha
+Copyright (c) 2026 shinsha (https://github.com/Shinsha1337)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+NOTE: The DaVinci Resolve Workflow Integration native module
+(WorkflowIntegration.node / WorkflowIntegration.darwin.node) is NOT part of this
+project and is NOT covered by the MIT license above. It is proprietary software
+owned by Blackmagic Design and ships with the DaVinci Resolve Studio Developer
+SDK. This project does not redistribute it; the installer copies it from your
+local Resolve installation at install time.

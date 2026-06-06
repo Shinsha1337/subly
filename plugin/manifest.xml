@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BlackmagicDesign>
+    <Plugin>
+        <Id>subly</Id>
+        <Name>Subly</Name>
+        <Version>1.0.0</Version>
+        <Description>Turn subtitle tracks into beautifully formatted Fusion Text+ captions, with live preview and a built-in editor.</Description>
+        <FilePath>main.js</FilePath>
+    </Plugin>
+</BlackmagicDesign>

@@ -240,6 +240,12 @@ Create Phrases it becomes the subtitle editor.
 - **Window chrome** — Windows uses Subly's custom titlebar buttons; macOS uses
   native traffic-light controls with the settings menu on the right.
 
+## Support the project
+
+Subly is free and open source. If you'd like to support its development:
+
+- 💜 [Boosty](https://boosty.to/shinsha)
+
 ## Credits
 
 Subly by [shinsha](https://github.com/Shinsha1337).

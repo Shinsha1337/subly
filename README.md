@@ -15,11 +15,27 @@ DaVinci Resolve Studio** as a Workflow Integration plugin (Electron).
 
 ## Install
 
-1. Download/clone this repository.
-2. In DaVinci Resolve, open **Workspace → Console**, set the language to **Lua**.
-3. Drag **`install.lua`** into the Console (or paste its contents) and run it.
+### Option 1 — Pre-built release (recommended for users)
+
+1. Download the latest `Subly-X.Y.Z.zip` from the
+   [Releases](https://github.com/Shinsha1337/subly/releases) page.
+2. Unzip it anywhere.
+3. In DaVinci Resolve, open **Workspace → Console**, set the language to **Lua**.
+4. Drag **`install.lua`** into the Console (or paste its contents) and run it.
+5. When prompted, restart DaVinci Resolve.
+6. Open **Workspace → Workflow Integrations → Subly**.
+
+### Option 2 — From source (for developers)
+
+1. Clone this repository: `git clone https://github.com/Shinsha1337/subly`
+2. Open **Workspace → Console** in Resolve, language = **Lua**.
+3. Drag **`install.lua`** into the Console and run it.
 4. When prompted, restart DaVinci Resolve.
 5. Open **Workspace → Workflow Integrations → Subly**.
+
+The release zip and the repository both ship a pre-built `plugin/dist`, so
+neither users nor developers need Node.js to install. You only need
+Node.js 22.12+ to **modify** the UI (see [Building from source](#building-from-source)).
 
 The installer copies the pre-built plugin (it does **not** run npm) into:
 

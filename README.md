@@ -1,6 +1,6 @@
 # Subly — DaVinci Resolve Subtitle Toolkit
 
-![License](https://img.shields.io/github/license/Shinsha1337/subly)
+![License](https://img.shields.io/badge/license-MIT-blue)
 ![Release](https://img.shields.io/github/v/release/Shinsha1337/subly)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-blue)
 

@@ -57,7 +57,7 @@ The installer copies the pre-built plugin (it does **not** run npm) into:
 ```
 **macOS**
 ```
-~/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins/subly/
+/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins/subly/
 ```
 
 The proprietary `WorkflowIntegration` native module is **not** bundled with
@@ -131,4 +131,4 @@ Subly by [shinsha](https://github.com/Shinsha1337).
 
 The DaVinci Resolve `WorkflowIntegration` native module is proprietary to
 Blackmagic Design, is not part of this project, and is not covered by the MIT
-license — see the note at the bottom of [LICENSE](LICENSE).
+license.

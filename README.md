@@ -1,25 +1,36 @@
-# Subly (DaVinci Resolve Workflow Integration)
+# Subly — DaVinci Resolve Subtitle Toolkit
 
-Turn subtitle tracks into beautifully formatted Fusion **Text+** captions — with
-live preview, smart phrase regrouping, and a built-in editor. Runs **inside
-DaVinci Resolve Studio** as a Workflow Integration plugin (Electron).
+![License](https://img.shields.io/github/license/Shinsha1337/subly)
+![Release](https://img.shields.io/github/v/release/Shinsha1337/subly)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-blue)
+
+Turn subtitle tracks into beautifully formatted Fusion **Text+** captions —
+with live preview, smart phrase regrouping, and a built-in editor. Runs
+**inside DaVinci Resolve Studio** as a Workflow Integration plugin (Electron).
 
 <img width="1140" height="1008" alt="Subly" src="https://github.com/user-attachments/assets/ca99c8ba-f6de-41f6-8132-f797c5e35b42" />
 
+## Features
+
+- Converts subtitle tracks to **Text+ clips** in one click
+- **Live preview** of captions directly in the timeline
+- Smart phrase regrouping — Whole Sentence / Single Word / Custom
+- Built-in subtitle editor with manual corrections
+- Windows & macOS support, one installer for both
 
 ## Requirements
 
-- **DaVinci Resolve Studio** (Workflow Integrations require Studio, not the free
-  version; the exact version needed depends on which Resolve features you use)
-- **Windows or macOS** — the same code and installer support both
-- **Node.js 22.12+** — only if you build the UI from source (end users don't need it)
+- **DaVinci Resolve Studio 18.5 or later** (Workflow Integrations require
+  Studio; the free version is not supported)
+- **Windows or macOS**
+- **Node.js 22.12+** — only if you build the UI from source (end users don't
+  need it)
 
 ## Install
 
-### Option 1 — Pre-built release (recommended for users)
+### Option 1 — Pre-built release (recommended)
 
-1. Download the latest version of Subly from the page
-   [Releases](https://github.com/Shinsha1337/subly/releases) page.
+1. Download the latest release from the [Releases](https://github.com/Shinsha1337/subly/releases) page.
 2. Unzip it anywhere.
 3. In DaVinci Resolve, open **Workspace → Console**, set the language to **Lua**.
 4. Drag **`install.lua`** into the Console (or paste its contents) and run it.
@@ -40,37 +51,22 @@ Node.js 22.12+ to **modify** the UI (see [Building from source](#building-from-s
 
 The installer copies the pre-built plugin (it does **not** run npm) into:
 
+**Windows**
 ```
-%PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\Workflow Integration Plugins\subly\   (Windows)
-/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins/subly/   (macOS)
+%PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\Workflow Integration Plugins\subly\
 ```
-
-The proprietary `WorkflowIntegration` native module is **not** bundled with this
-project (it belongs to Blackmagic Design). The installer copies it from your
-local DaVinci Resolve SDK — on Windows from
-`%PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\Developer\Workflow Integrations\Examples\SamplePlugin\WorkflowIntegration.node`,
-on macOS from the matching path under
-`/Library/Application Support/Blackmagic Design/DaVinci Resolve/Developer/...`.
-It is already present on any machine with DaVinci Resolve Studio installed.
-
-To uninstall, run **`uninstall.lua`** the same way (it removes the plugin folder
-and optionally your settings).
-
-## Building from source
-
-Only needed if you change the UI (`plugin/src/`). Everything in `node_modules`
-(Vite, React, Electron) is for building / running locally only — end users never
-need it; they get the pre-built `plugin/dist`.
-
+**macOS**
 ```
-cd plugin
-npm ci           # restores node_modules from package-lock.json
-npm test         # runs subtitle logic tests
-npm run build    # rebuilds plugin/dist (the bundle the plugin actually runs)
+~/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins/subly/
 ```
 
-`plugin/dist` is the built UI and must be present for the installer to succeed.
-`node_modules` and the `WorkflowIntegration.*.node` files are git-ignored.
+The proprietary `WorkflowIntegration` native module is **not** bundled with
+this project (it belongs to Blackmagic Design). The installer copies it from
+your local DaVinci Resolve SDK — it is already present on any machine with
+DaVinci Resolve Studio installed.
+
+To uninstall, run **`uninstall.lua`** the same way (it removes the plugin
+folder and optionally your settings).
 
 ## How it works
 
@@ -85,13 +81,26 @@ Subly works in three tabs, in order: **Template → Transcription → Deliver**.
   then **Create Captions** to bake every phrase as a Text+ clip on a new
   timeline track.
 
-The right-hand panel is a shared subtitle editor. Settings/presets (modes,
-case, punctuation, theme) are stored in `settings.json` under `%APPDATA%\subly`
+Settings/presets are stored in `settings.json` under `%APPDATA%\subly`
 (Windows) / `~/Library/Application Support/subly` (macOS).
+
+## Building from source
+
+Only needed if you change the UI (`plugin/src/`).
+
+```
+cd plugin
+npm ci           # restores node_modules from package-lock.json
+npm test         # runs subtitle logic tests
+npm run build    # rebuilds plugin/dist (the bundle the plugin actually runs)
+```
+
+`plugin/dist` is the built UI and must be present for the installer to succeed.
+`node_modules` and the `WorkflowIntegration.*.node` files are git-ignored.
 
 ## Architecture
 
-- **Electron** (bundled with DaVinci Resolve) — `plugin/main.js`, `preload.js`,
+- **Electron** (bundled with DaVinci Resolve) — `plugin/main.js`, `preload.js`;
   Windows gets a custom titlebar, macOS uses native traffic lights.
 - **React + Vite** UI in `plugin/src/`, built to `plugin/dist/`.
 - **Resolve API** via `plugin/ipc/resolve.js` and the `WorkflowIntegration`
@@ -99,15 +108,17 @@ case, punctuation, theme) are stored in `settings.json` under `%APPDATA%\subly`
 - **Fusion Text+ bridge** — `plugin/ipc/luaBridge.js` spawns `fuscript` with
   `plugin/lua/subly_bridge_launcher.lua` for tool-level Text+ operations
   (slider live preview); the bridge is local-only and token-authenticated.
-- **Settings** in `settings.json` under `%APPDATA%\subly` /
-  `~/Library/Application Support/subly`.
 
 > **Note on templates:** applying a Text+ template runs the template's own
 > embedded Fusion/Lua. Only import `.drb` / Text+ templates you trust — the
 > bundled `Subly.drb` is safe.
 
 ## Support
-Subly is free and open source. If you'd like to support its development:
+
+Subly is free and open source. If it saves you time, consider giving it a
+⭐ on GitHub — it helps others find the project.
+
+If you'd like to support development financially:
 - 💜 [Boosty](https://boosty.to/shinsha)
 
 ## Credits
@@ -121,4 +132,3 @@ Subly by [shinsha](https://github.com/Shinsha1337).
 The DaVinci Resolve `WorkflowIntegration` native module is proprietary to
 Blackmagic Design, is not part of this project, and is not covered by the MIT
 license — see the note at the bottom of [LICENSE](LICENSE).
-

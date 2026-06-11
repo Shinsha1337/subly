@@ -9,7 +9,7 @@
   REMOVES
     Windows : %PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\
               Workflow Integration Plugins\subly
-    macOS   : /Library/Application Support/Blackmagic Design/DaVinci Resolve/
+    macOS   : ~/Library/Application Support/Blackmagic Design/DaVinci Resolve/
               Workflow Integration Plugins/subly
 ============================================================================ ]]
 ---@diagnostic disable: undefined-global
@@ -243,7 +243,7 @@ if is_win then
     local pd = os.getenv("PROGRAMDATA") or ((os.getenv("SystemDrive") or "C:") .. "\\ProgramData")
     dest_root = pd .. "\\Blackmagic Design\\DaVinci Resolve\\Support\\Workflow Integration Plugins"
 else
-    dest_root = "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins"
+    dest_root = os.getenv("HOME") .. "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins"
 end
 local dest_dir = dest_root .. sep .. "subly"
 local legacy_dest_dir = dest_root .. sep .. "com.subly.plugin"

@@ -10,7 +10,7 @@
     Copies <this folder>/plugin/* into
       Windows : %PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\
                 Workflow Integration Plugins\subly
-      macOS   : ~/Library/Application Support/Blackmagic Design/DaVinci Resolve/
+      macOS   : /Library/Application Support/Blackmagic Design/DaVinci Resolve/
                 Workflow Integration Plugins/subly
     The React UI must already be built (plugin/dist). Re-run `npm run build`
     in plugin/ only when you change the UI — end users never need Node.
@@ -270,10 +270,23 @@ if is_win then
     local pd = os.getenv("PROGRAMDATA") or "C:\\ProgramData"
     dest_root = pd .. "\\Blackmagic Design\\DaVinci Resolve\\Support\\Workflow Integration Plugins"
 else
-    dest_root = os.getenv("HOME") .. "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins"
+    -- DaVinci Resolve scans the system-wide Workflow Integration Plugins
+    -- directory on macOS. Installing into ~/Library silently succeeds but the
+    -- plugin never appears under Workspace -> Workflow Integrations.
+    dest_root = "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins"
 end
 local dest_dir = dest_root .. sep .. "subly"
 local legacy_dest_dir = dest_root .. sep .. "com.subly.plugin"
+local old_user_dest_dir = nil
+local old_user_legacy_dest_dir = nil
+if not is_win then
+    local home = os.getenv("HOME") or ""
+    if home ~= "" then
+        local old_user_root = home .. "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins"
+        old_user_dest_dir = old_user_root .. sep .. "subly"
+        old_user_legacy_dest_dir = old_user_root .. sep .. "com.subly.plugin"
+    end
+end
 info("Installing to: " .. dest_dir)
 
 -- { name, is_directory } — mirrors install.ps1's $include (no node_modules/src).
@@ -333,6 +346,8 @@ end
 -- The old pre-1.0 folder is removed too, otherwise Resolve would show duplicate
 -- Subly menu entries after the plugin ID/folder was simplified to "subly".
 if legacy_dest_dir ~= dest_dir then rmtree(legacy_dest_dir) end
+if old_user_dest_dir and old_user_dest_dir ~= dest_dir then rmtree(old_user_dest_dir) end
+if old_user_legacy_dest_dir and old_user_legacy_dest_dir ~= legacy_dest_dir then rmtree(old_user_legacy_dest_dir) end
 rmtree(dest_dir)
 mkdirs(dest_dir)
 

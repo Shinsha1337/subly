@@ -1,4 +1,7 @@
 * text=auto
+.gitattributes text eol=lf
+.gitignore text eol=lf
+LICENSE text eol=lf
 
 *.js text eol=lf
 *.jsx text eol=lf
@@ -13,10 +16,12 @@
 
 *.drb binary
 *.ico binary
+*.icns binary
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
 *.pdf binary
 *.node binary
-*.darwin.node binary
+
+Subly/dist/** linguist-generated=true

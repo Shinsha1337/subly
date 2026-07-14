@@ -8,9 +8,9 @@
 
   REMOVES
     Windows : %PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\
-              Workflow Integration Plugins\subly
+              Workflow Integration Plugins\Subly
     macOS   : /Library/Application Support/Blackmagic Design/DaVinci Resolve/
-              Workflow Integration Plugins/subly
+              Workflow Integration Plugins/Subly
 ============================================================================ ]]
 ---@diagnostic disable: undefined-global
 
@@ -248,54 +248,52 @@ else
     -- so we also clean that path up below if it exists.
     dest_root = "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins"
 end
-local dest_dir = dest_root .. sep .. "subly"
-local legacy_dest_dir = dest_root .. sep .. "com.subly.plugin"
-local old_user_dest_dir = nil
-local old_user_legacy_dest_dir = nil
+local install_dirs = {
+    dest_root .. sep .. "Subly",
+    dest_root .. sep .. "subly",
+    dest_root .. sep .. "com.subly.plugin",
+}
 if not is_win then
     local home = os.getenv("HOME") or ""
     if home ~= "" then
         local old_user_root = home .. "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Workflow Integration Plugins"
-        old_user_dest_dir = old_user_root .. sep .. "subly"
-        old_user_legacy_dest_dir = old_user_root .. sep .. "com.subly.plugin"
+        install_dirs[#install_dirs + 1] = old_user_root .. sep .. "Subly"
+        install_dirs[#install_dirs + 1] = old_user_root .. sep .. "subly"
+        install_dirs[#install_dirs + 1] = old_user_root .. sep .. "com.subly.plugin"
     end
 end
 
-if not dir_exists(dest_dir) and not dir_exists(legacy_dest_dir)
-    and (not old_user_dest_dir or not dir_exists(old_user_dest_dir))
-    and (not old_user_legacy_dest_dir or not dir_exists(old_user_legacy_dest_dir)) then
-    info("Subly is not installed (nothing at " .. dest_dir .. ").")
+local installed = false
+for _, path in ipairs(install_dirs) do
+    if dir_exists(path) then
+        installed = true
+        break
+    end
+end
+
+if not installed then
+    info("Subly is not installed (nothing at " .. install_dirs[1] .. ").")
     notify("Subly", "Subly does not appear to be installed.")
     return
 end
 
-if dir_exists(dest_dir) then
-    info("Removing: " .. dest_dir)
-    rmtree(dest_dir)
-end
-if legacy_dest_dir ~= dest_dir and dir_exists(legacy_dest_dir) then
-    info("Removing legacy install: " .. legacy_dest_dir)
-    rmtree(legacy_dest_dir)
-end
-if old_user_dest_dir and old_user_dest_dir ~= dest_dir and dir_exists(old_user_dest_dir) then
-    info("Removing old user install: " .. old_user_dest_dir)
-    rmtree(old_user_dest_dir)
-end
-if old_user_legacy_dest_dir and old_user_legacy_dest_dir ~= legacy_dest_dir and dir_exists(old_user_legacy_dest_dir) then
-    info("Removing old user legacy install: " .. old_user_legacy_dest_dir)
-    rmtree(old_user_legacy_dest_dir)
+for _, path in ipairs(install_dirs) do
+    if dir_exists(path) then
+        info("Removing: " .. path)
+        rmtree(path)
+    end
 end
 
-if dir_exists(dest_dir) or dir_exists(legacy_dest_dir)
-    or (old_user_dest_dir and dir_exists(old_user_dest_dir))
-    or (old_user_legacy_dest_dir and dir_exists(old_user_legacy_dest_dir)) then
+local remaining = {}
+for _, path in ipairs(install_dirs) do
+    if dir_exists(path) then remaining[#remaining + 1] = path end
+end
+
+if #remaining > 0 then
     fail("Could not fully remove the plugin folder. If it was installed as")
     fail("administrator, run DaVinci Resolve as administrator and try again,")
     fail("or delete these folders manually if present:")
-    fail("  " .. dest_dir)
-    fail("  " .. legacy_dest_dir)
-    if old_user_dest_dir then fail("  " .. old_user_dest_dir) end
-    if old_user_legacy_dest_dir then fail("  " .. old_user_legacy_dest_dir) end
+    for _, path in ipairs(remaining) do fail("  " .. path) end
     notify("Subly — uninstall incomplete",
         "Some files could not be removed.\nSee the Console for the path to delete manually.")
     return
